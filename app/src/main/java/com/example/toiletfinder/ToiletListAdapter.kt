@@ -134,7 +134,7 @@ class ToiletListAdapter(
 
             Glide.with(itemView.context)
                 .load(toilet.imageUrl)
-                .placeholder(R.drawable.ic_toilet_marker)
+                .placeholder(R.drawable.toilet_icon)
                 .into(toiletImageView)
         }
     }

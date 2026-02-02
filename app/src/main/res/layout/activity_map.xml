@@ -39,21 +39,33 @@
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="200m" />
+            android:text="200m"
+            app:backgroundTint="@color/toggle_button_background_color"
+            app:strokeColor="@android:color/white"
+            app:strokeWidth="1dp"
+            android:textColor="@color/white"/>
 
         <Button
             android:id="@+id/button_500m"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="500m" />
+            android:text="500m"
+            app:backgroundTint="@color/toggle_button_background_color"
+            app:strokeColor="@android:color/white"
+            app:strokeWidth="1dp"
+            android:textColor="@color/white"/>
 
         <Button
             android:id="@+id/button_1km"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1km" />
+            android:text="1km"
+            app:backgroundTint="@color/toggle_button_background_color"
+            app:strokeColor="@android:color/white"
+            app:strokeWidth="1dp"
+            android:textColor="@color/white"/>
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
