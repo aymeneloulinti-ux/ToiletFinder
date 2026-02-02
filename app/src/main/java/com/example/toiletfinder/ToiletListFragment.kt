@@ -13,6 +13,7 @@ class ToiletListFragment : Fragment() {
 
     private val toiletViewModel: ToiletViewModel by activityViewModels()
     private lateinit var toiletListRecyclerView: RecyclerView
+    private lateinit var toiletListAdapter: ToiletListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,15 +29,36 @@ class ToiletListFragment : Fragment() {
         toiletListRecyclerView = view.findViewById(R.id.toilet_list_recyclerview)
         toiletListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        toiletListAdapter = ToiletListAdapter(emptyList(), null) { toilet ->
+            val detailFragment = ToiletDetailBottomSheetFragment.newInstance(toilet)
+            detailFragment.show(parentFragmentManager, detailFragment.tag)
+        }
+        toiletListRecyclerView.adapter = toiletListAdapter
+
+        toiletViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            toiletListAdapter.showLoading(isLoading)
+        }
+
+        toiletViewModel.userLocation.observe(viewLifecycleOwner) { location ->
+            location?.let {
+                toiletListAdapter.updateUserLocation(it)
+                toiletViewModel.toilets.value?.let { toilets ->
+                    val sortedToilets = toilets.sortedBy { toilet ->
+                        toilet.distanceTo(it)
+                    }
+                    toiletListAdapter.updateToilets(sortedToilets)
+                }
+            }
+        }
+
         toiletViewModel.toilets.observe(viewLifecycleOwner) { toilets ->
-            if (toilets != null && toiletViewModel.userLocation.value != null) {
-                val sortedToilets = toilets.sortedBy { toilet ->
-                    toilet.distanceTo(toiletViewModel.userLocation.value!!)
-                }
-                toiletListRecyclerView.adapter = ToiletListAdapter(sortedToilets, toiletViewModel.userLocation.value!!) { toilet ->
-                    val detailFragment = ToiletDetailBottomSheetFragment.newInstance(toilet)
-                    detailFragment.show(parentFragmentManager, detailFragment.tag)
-                }
+            if (toilets != null) {
+                val sortedToilets = toiletViewModel.userLocation.value?.let { location ->
+                    toilets.sortedBy { toilet ->
+                        toilet.distanceTo(location)
+                    }
+                } ?: toilets
+                toiletListAdapter.updateToilets(sortedToilets)
             }
         }
     }

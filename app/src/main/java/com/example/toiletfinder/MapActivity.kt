@@ -2,6 +2,7 @@ package com.example.toiletfinder
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.toiletfinder.network.Toilet
@@ -51,5 +52,15 @@ class MapActivity : AppCompatActivity() {
     fun showToiletDetail(toilet: Toilet) {
         val toiletDetailFragment = ToiletDetailBottomSheetFragment.newInstance(toilet)
         toiletDetailFragment.show(supportFragmentManager, toiletDetailFragment.tag)
+    }
+
+    fun updateRadiusButtons(searchRadius: Int) {
+        val button200m: Button = findViewById(R.id.button_200m)
+        val button500m: Button = findViewById(R.id.button_500m)
+        val button1km: Button = findViewById(R.id.button_1km)
+
+        button200m.text = "${searchRadius}m"
+        button500m.text = "${searchRadius * 2.5}m"
+        button1km.text = "${searchRadius * 5}m"
     }
 }

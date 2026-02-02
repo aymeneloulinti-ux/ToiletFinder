@@ -5,6 +5,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
@@ -19,27 +20,27 @@ object RetrofitInstance {
 
     fun getOverpassApi(): OverpassApiService {
         return Retrofit.Builder()
-            .baseUrl("https://overpass-api.de/")
+            .baseUrl("https://overpass-api.de/api/")
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(OverpassApiService::class.java)
     }
 
-    fun getPanoramaxApi(): OverpassApiService {
+    fun getPanoramaxApi(): PanoramaxApiService {
         return Retrofit.Builder()
             .baseUrl("https://api.panoramax.xyz/")
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
-            .create(OverpassApiService::class.java)
+            .create(PanoramaxApiService::class.java)
     }
 
     fun getDirectionsApi(): DirectionsApiService {
         return Retrofit.Builder()
             .baseUrl("https://maps.googleapis.com/")
             .client(client)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(SimpleXmlConverterFactory.create())
             .build()
             .create(DirectionsApiService::class.java)
     }

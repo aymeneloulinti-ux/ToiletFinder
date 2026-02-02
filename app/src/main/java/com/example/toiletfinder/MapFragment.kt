@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,6 +24,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.Circle
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -35,6 +38,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+    private var searchRadiusCircle: Circle? = null
 
     private val toiletViewModel: ToiletViewModel by activityViewModels()
     private var radius: Int = 250
@@ -83,6 +87,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         toiletViewModel.userLocation.value?.let {
             val currentLatLng = LatLng(it.latitude, it.longitude)
             toiletViewModel.fetchToilets(currentLatLng, radius)
+            drawSearchRadiusCircle(currentLatLng, radius.toDouble())
         }
     }
 
@@ -106,12 +111,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 val currentLatLng = LatLng(location.latitude, location.longitude)
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16f))
                 toiletViewModel.fetchToilets(currentLatLng, radius)
+                drawSearchRadiusCircle(currentLatLng, radius.toDouble())
             }
         }
     }
 
     private fun updateMap(toilets: List<com.example.toiletfinder.network.Toilet>) {
         map.clear()
+        // Re-draw the search radius circle since map.clear() removes it
+        toiletViewModel.userLocation.value?.let {
+            drawSearchRadiusCircle(LatLng(it.latitude, it.longitude), radius.toDouble())
+        }
         val toiletIcon = bitmapDescriptorFromVector(R.drawable.ic_toilet_marker)
         for (toilet in toilets) {
             val toiletLocation = LatLng(toilet.lat, toilet.lon)
@@ -131,6 +141,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             val userLocation = toiletViewModel.userLocation.value!!
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(userLocation.latitude, userLocation.longitude), 16f))
         }
+    }
+
+    private fun drawSearchRadiusCircle(center: LatLng, radius: Double) {
+        searchRadiusCircle?.remove()
+        searchRadiusCircle = map.addCircle(
+            CircleOptions()
+                .center(center)
+                .radius(radius)
+                .strokeColor(Color.argb(128, 0, 122, 255))
+                .fillColor(Color.argb(50, 0, 122, 255))
+                .strokeWidth(2f)
+        )
     }
 
     private fun bitmapDescriptorFromVector(vectorResId: Int): BitmapDescriptor {

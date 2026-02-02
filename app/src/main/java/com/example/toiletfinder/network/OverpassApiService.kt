@@ -1,12 +1,11 @@
 package com.example.toiletfinder.network
 
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.POST
 
 interface OverpassApiService {
-    @GET("api/interpreter")
-    suspend fun getToilets(@Query("data") query: String): OverpassResponse
-
-    @GET("api/v1/pictures")
-    suspend fun getToiletImage(@Query("bbox") bbox: String): PanoramaxResponse
+    @FormUrlEncoded
+    @POST("interpreter")
+    suspend fun getToilets(@Field("data") query: String): OverpassResponse
 }

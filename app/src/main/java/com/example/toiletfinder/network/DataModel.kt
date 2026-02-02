@@ -17,7 +17,8 @@ fun OverpassResponse.toToilets(): List<Toilet> {
                 lat = element.lat,
                 lon = element.lon,
                 name = element.tags?.name ?: "Toilette inconnue",
-                fee = element.tags?.fee == "yes"
+                fee = element.tags?.fee == "yes",
+                imageUrl = null
             )
         } else {
             null
@@ -46,7 +47,8 @@ data class Toilet(
     val name: String,
     val fee: Boolean,
     var userRating: Float? = null,
-    var commentCount: Int = 0
+    var commentCount: Int = 0,
+    var imageUrl: String? = null
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
@@ -55,7 +57,8 @@ data class Toilet(
         parcel.readString()!!,
         parcel.readByte() != 0.toByte(),
         parcel.readValue(Float::class.java.classLoader) as? Float,
-        parcel.readInt()
+        parcel.readInt(),
+        parcel.readString()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -66,6 +69,7 @@ data class Toilet(
         parcel.writeByte(if (fee) 1 else 0)
         parcel.writeValue(userRating)
         parcel.writeInt(commentCount)
+        parcel.writeString(imageUrl)
     }
 
     override fun describeContents(): Int {

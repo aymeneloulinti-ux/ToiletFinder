@@ -49,6 +49,7 @@ dependencies {
     implementation("com.google.android.libraries.places:places:3.5.0")
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-moshi:3.0.0")
+    implementation("com.squareup.retrofit2:converter-simplexml:2.9.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.2")
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
