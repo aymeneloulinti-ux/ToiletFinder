@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ToiletFinder</string>
+    <string name="maps_api_key">AIzaSyAoPpgPsJkqrZwqdo19HiiQPmN9zey6tww</string>
+    <string name="toilet_icon">Toilet icon</string>
+    <string name="back_button_desc">Back to home screen</string>
+    <string name="nearby_toilets">Nearby Toilets</string>
+    <string name="no_toilets_found_nearby">No toilets found nearby.</string>
+</resources>
